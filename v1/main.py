@@ -2,10 +2,11 @@ import os
 import time
 
 import matplotlib.pyplot as plt
+import numpy as np
 import tensorflow as tf
 from keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras import layers
-import numpy as np
+
 
 def make_generator_model():
     model = tf.keras.Sequential()
@@ -38,7 +39,7 @@ def make_generator_model():
 def make_discriminator_model():
     model = tf.keras.Sequential()
 
-    model.add(layers.Conv2D(8, (3, 3), strides=(1, 1), padding='same',input_shape=[140, 320, 3]))
+    model.add(layers.Conv2D(8, (3, 3), strides=(1, 1), padding='same', input_shape=[140, 320, 3]))
     model.add(layers.LeakyReLU())
     model.add(layers.Conv2D(16, (3, 3), strides=(1, 1), padding='same'))
     model.add(layers.LeakyReLU())
@@ -95,8 +96,8 @@ def train_step(images):
     return disc_loss, gen_loss
 
 
-def train(epochs):
-    for epoch in range(epochs):
+def train(epochs,start_epoch):
+    for epoch in range(start_epoch, epochs):
         start = time.time()
         print("Starting epoch number %d" % (epoch + 1))
         for i in range(len(data_it)):
@@ -166,7 +167,14 @@ checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer,
                                  generator=generator,
                                  discriminator=discriminator)
 checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
-train(EPOCHS)
+
+# noise = tf.random.normal([100, noise_dim])
+# generated = generator(noise, training=False)
+# for i in range(noise.shape[0]):
+#     img = (generated[i] + 0.5).numpy().clip(0, 1)
+#     plt.imsave(f"./output_images/output{i}.png", img)
+
+train(EPOCHS, 466)
 # generate_and_save_images(generator,
 #                          0000,
 #                          seed)
