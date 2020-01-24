@@ -38,7 +38,7 @@ def make_generator_model():
 
 def make_discriminator_features_model():
     model = tf.keras.Sequential()
-
+    # model.add(layers.GaussianNoise(input_shape=[140, 320, 3]))
     model.add(layers.Conv2D(8, (3, 3), strides=(1, 1), padding='same', input_shape=[140, 320, 3]))
     model.add(layers.LeakyReLU())
     model.add(layers.Conv2D(16, (3, 3), strides=(1, 1), padding='same'))
@@ -149,7 +149,7 @@ def train(epochs, starting_epoch):
             image_batch = (data_it.next() / 127.5) - 1
             disc_loss, gen_loss = train_step(image_batch)
             tries = 0
-            while gen_loss > 3 and tries < 20:
+            while gen_loss > 2 and tries < 30:
                 print(f"try: {tries + 1} disc_loss: " + str(disc_loss))
                 print(f"try: {tries + 1} gen_loss: " + str(gen_loss))
                 disc_loss, gen_loss = train_step(image_batch, False)
@@ -204,7 +204,7 @@ else:
     seed = tf.random.normal([num_examples_to_generate, noise_dim])
     np.save('./seed.npy', seed)
 
-generator_optimizer = tf.keras.optimizers.Adam(2e-4)
+generator_optimizer = tf.keras.optimizers.Adam(1e-4)
 discriminator_fe_optimizer = tf.keras.optimizers.Adam(2e-4)
 discriminator_final_optimizer = tf.keras.optimizers.Adam(2e-4)
 
@@ -221,8 +221,8 @@ checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer,
                                  discriminator_fe=discriminator_fe,
                                  discriminator_final=discriminator_final)
 checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
-
-train(EPOCHS, 691)
+# print(generator_optimizer)
+train(EPOCHS, 705)
 # generate_and_save_images(generator,
 #                          0000,
 #                          seed)
