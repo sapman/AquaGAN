@@ -64,7 +64,7 @@ squared_error = tf.keras.losses.MeanSquaredError()
 
 
 def discriminator_loss(real_output, fake_output):
-    real_loss = squared_error(real_output ,tf.ones_like(real_output) * 0.9)
+    real_loss = squared_error(real_output, tf.ones_like(real_output) * 0.9)
     fake_loss = squared_error(fake_output, tf.zeros_like(fake_output))
     total_loss = 0.5 * real_loss + 0.5 * fake_loss
     return total_loss

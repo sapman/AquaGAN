@@ -90,7 +90,7 @@ def get_fx(model, x):
     return intermediate_layer_model.predict(x)
 
 
-# @tf.function
+@tf.function
 def train_step(images):
     noise = tf.random.normal([images.shape[0], noise_dim])
     # noise = seed
@@ -171,11 +171,11 @@ num_examples_to_generate = 16
 datagen = ImageDataGenerator()
 data_it = datagen.flow_from_directory('../fishDataSets/', target_size=(140, 320), class_mode=None,
                                       batch_size=BATCH_SIZE)
-if os.path.exists('./seed'):
-    seed = np.load('./seed')
+if os.path.exists('./seed.npy'):
+    seed = np.load('./seed.npy')
 else:
     seed = tf.random.normal([num_examples_to_generate, noise_dim])
-    np.save('./seed', seed)
+    np.save('./seed.npy', seed)
 
 generator_optimizer = tf.keras.optimizers.Adam(2e-4)
 discriminator_fe_optimizer = tf.keras.optimizers.Adam(2e-4)

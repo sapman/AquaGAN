@@ -1,0 +1,1 @@
+Basic DCGAN, the given example. 
